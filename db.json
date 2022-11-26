@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Buy Milk",
+      "day": "2022-03-01T14:30",
+      "reminder": true
+    },
+    {
+      "id": 2,
+      "text": "Buy Bread",
+      "day": "2022-03-02T13:00",
+      "reminder": true
+    },
+    {
+      "id": 3,
+      "text": "Eat bread and milk",
+      "day": "2022-03-03T11:45",
+      "reminder": false
+    }
+  ]
+}

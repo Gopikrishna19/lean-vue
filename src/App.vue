@@ -29,46 +29,60 @@ export default {
         };
     },
     methods: {
-        addTask(task) {
-            this.tasks = this.tasks.concat({
-                ...task,
-                id: this.tasks.at(-1).id + 1,
+        async addTask(task) {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(task),
             });
+
+            const data = await res.json();
+
+            this.tasks = this.tasks.concat(data);
         },
-        deleteTask(id) {
-            this.tasks = this.tasks.filter((task) => task.id !== id);
+        async deleteTask(id) {
+            const res = await fetch(`/api/tasks/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                this.tasks = this.tasks.filter((task) => task.id !== id);
+            }
         },
         showAddForm(canShowAddForm) {
             this.canShowAddForm = canShowAddForm;
         },
-        toggleReminder(id) {
-            this.tasks = this.tasks.map((task) => task.id === id ? {
-                ...task,
-                reminder: !task.reminder,
-            } : task);
+        async toggleReminder(id) {
+            const task = this.tasks.find((task) => task.id === id);
+
+            const res = await fetch(`/api/tasks/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reminder: !task.reminder,
+                }),
+            });
+            const data = await res.json();
+
+            this.tasks = this.tasks.map((task) => task.id === id ? data : task);
+        },
+        async getTasks() {
+            const res = await fetch('/api/tasks');
+
+            return res.json();
+        },
+        async getTask(id) {
+            const res = await fetch(`/api/tasks/${id}`);
+
+            return res.json();
         },
     },
-    created() {
-        this.tasks = [
-            {
-                id: 1,
-                text: 'Buy Milk',
-                day: '2022-03-01T14:30',
-                reminder: true,
-            },
-            {
-                id: 2,
-                text: 'Buy Bread',
-                day: '2022-03-02T13:00',
-                reminder: true,
-            },
-            {
-                id: 3,
-                text: 'Eat bread and milk',
-                day: '2022-03-03T11:45',
-                reminder: false,
-            },
-        ];
+    async created() {
+        this.tasks = await this.getTasks();
     },
 };
 </script>
