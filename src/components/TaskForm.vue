@@ -25,7 +25,9 @@ import {serializeDate} from '@/utils/date';
 
 export default {
     name: 'LV-TaskForm',
-    components: {Button},
+    components: {
+        Button
+    },
     data() {
         return {
             text: '',
